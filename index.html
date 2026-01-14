@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safe IPO Checker App</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f1f5f9; margin:0; }
+    header { background:#0f172a; color:white; padding:16px; text-align:center; }
+    .container { padding:16px; }
+    .card { background:white; padding:16px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.08); margin-bottom:16px; }
+    input, select, button { width:100%; padding:12px; margin-top:10px; border-radius:8px; border:1px solid #cbd5e1; }
+    button { background:#2563eb; color:white; font-weight:bold; border:none; }
+    button:active { background:#1d4ed8; }
+    .safe { color:#16a34a; font-weight:bold; }
+    .moderate { color:#d97706; font-weight:bold; }
+    .risky { color:#dc2626; font-weight:bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Safe IPO Checker</h2>
+    <p>IPO apply karna chahiye ya nahi?</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <input id="profit" type="number" placeholder="Last Year Profit (₹ Cr)" />
+      <input id="debt" type="number" placeholder="Total Debt (₹ Cr)" />
+      <select id="ofs">
+        <option value="no">Fresh Issue / Partial OFS</option>
+        <option value="yes">100% OFS</option>
+      </select>
+      <select id="psu">
+        <option value="no">Private Company</option>
+        <option value="yes">PSU / Govt Company</option>
+      </select>
+      <button onclick="checkIPO()">Check IPO Safety</button>
+    </div>
+
+    <div class="card" id="result" style="display:none"></div>
+  </div>
+
+  <script>
+    function checkIPO() {
+      let score = 0;
+      const profit = Number(document.getElementById('profit').value);
+      const debt = Number(document.getElementById('debt').value);
+      const ofs = document.getElementById('ofs').value;
+      const psu = document.getElementById('psu').value;
+
+      if (profit > 0) score += 2;
+      if (debt < profit) score += 2;
+      if (ofs === 'no') score += 1;
+      if (psu === 'yes') score += 1;
+
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+
+      if (score >= 5) {
+        result.innerHTML = `<h3 class='safe'>SAFE IPO 👍</h3><p>Fundamentals strong lag rahe hain.</p>`;
+      } else if (score >= 3) {
+        result.innerHTML = `<h3 class='moderate'>MODERATE ⚠️</h3><p>Sirf limited amount ya listing ke liye.</p>`;
+      } else {
+        result.innerHTML = `<h3 class='risky'>RISKY IPO ❌</h3><p>Apply avoid karna better.</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
